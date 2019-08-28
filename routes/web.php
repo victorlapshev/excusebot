@@ -12,5 +12,11 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return app('excuses')->getRandom();
+});
+
+$router->post('/webhook', function () use ($router) {
+    $updates = app('telegram')->getWebhookUpdates();
+
+    event(new \App\Events\TelegramUpdatesEvent($updates));
 });
