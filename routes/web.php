@@ -11,6 +11,13 @@
 |
 */
 
+/**
+ * @var $router Router
+ */
+
+use App\Events\TelegramUpdatesEvent;
+use Laravel\Lumen\Routing\Router;
+
 $router->get('/', function () use ($router) {
     return app('excuses')->getRandom();
 });
@@ -18,5 +25,5 @@ $router->get('/', function () use ($router) {
 $router->post('/webhook', function () use ($router) {
     $updates = app('telegram')->getWebhookUpdates();
 
-    event(new \App\Events\TelegramUpdatesEvent($updates));
+    event(new TelegramUpdatesEvent($updates));
 });

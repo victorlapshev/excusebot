@@ -1,5 +1,6 @@
-<?php
+<?php /** @noinspection PhpUnusedParameterInspection */
 
+use App\Excuses;
 use Telegram\Bot\Api;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -53,7 +54,7 @@ $app->bind('telegram', function () {
 });
 
 $app->bind('excuses', function () {
-    return new \App\Excuses();
+    return new Excuses();
 });
 /*
 |--------------------------------------------------------------------------

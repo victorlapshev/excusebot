@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\TelegramUpdatesEvent;
 use Telegram\Bot\Api;
+use Telegram\Bot\Exceptions\TelegramSDKException;
 
 class TelegramUpdatesListener
 {
@@ -24,7 +25,7 @@ class TelegramUpdatesListener
      *
      * @param TelegramUpdatesEvent $event
      * @return void
-     * @throws \Telegram\Bot\Exceptions\TelegramSDKException
+     * @throws TelegramSDKException
      */
     public function handle(TelegramUpdatesEvent $event)
     {

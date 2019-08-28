@@ -10,7 +10,6 @@ class Excuses
 
     /**
      * Excuses constructor.
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function __construct()
     {

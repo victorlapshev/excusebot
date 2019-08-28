@@ -8,6 +8,9 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 
+/**
+ * @method static where(string $string, array|string|null $input)
+ */
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable;
