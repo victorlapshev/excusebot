@@ -40,7 +40,7 @@ class TelegramUpdatesListener
                 'id' => $i,
                 'title' => 'Excuse ' . $i,
                 'message_text' => $excuse,
-                'description'    => $excuse,
+                'description' => $excuse,
             ];
         }
 
