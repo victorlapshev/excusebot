@@ -1,0 +1,191 @@
+# nginx config map
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+data:
+  virtualhost.conf: |
+    server {
+      listen 80 default;
+      listen 443 ssl;
+      root /app/build/public;
+
+      ssl_certificate /etc/nginx/ssl/nginx.crt;
+      ssl_certificate_key /etc/nginx/ssl/nginx.key;
+      ssl_session_timeout 1d;
+      ssl_session_cache shared:SSL:50m;
+      ssl_session_tickets off;
+      ssl_protocols TLSv1.2;
+      ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
+      ssl_prefer_server_ciphers on;
+      add_header Strict-Transport-Security max-age=15768000;
+      ssl_stapling on;
+      ssl_stapling_verify on;
+
+      add_header X-Frame-Options "SAMEORIGIN";
+      add_header X-XSS-Protection "1; mode=block";
+      add_header X-Content-Type-Options "nosniff";
+
+      index index.html index.htm index.php;
+
+      charset utf-8;
+
+      location / {
+          try_files $uri $uri/ /index.php?$query_string;
+      }
+
+      location = /favicon.ico { access_log off; log_not_found off; }
+      location = /robots.txt  { access_log off; log_not_found off; }
+
+      error_page 404 /index.php;
+
+      location ~ \.php$ {
+          fastcgi_pass fpm:9000;
+          fastcgi_index index.php;
+          fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+          include fastcgi_params;
+      }
+
+      location ~ /\.(?!well-known).* {
+          deny all;
+      }
+    }
+  nginx.conf: |
+    user nginx;
+    worker_processes  3;
+    error_log  /var/log/nginx/error.log;
+    events {
+      worker_connections  10240;
+    }
+    http {
+      log_format  main
+              'remote_addr:$remote_addr\t'
+              'time_local:$time_local\t'
+              'method:$request_method\t'
+              'uri:$request_uri\t'
+              'host:$host\t'
+              'status:$status\t'
+              'bytes_sent:$body_bytes_sent\t'
+              'referer:$http_referer\t'
+              'useragent:$http_user_agent\t'
+              'forwardedfor:$http_x_forwarded_for\t'
+              'request_time:$request_time';
+      access_log  /var/log/nginx/access.log main;
+      server {
+          listen       80;
+          server_name  _;
+          location / {
+              root   html;
+              index  index.html index.htm;
+          }
+      }
+      include /etc/nginx/virtualhost/virtualhost.conf;
+    }
+  fastcgi_params: |
+    fastcgi_param   QUERY_STRING            $query_string;
+    fastcgi_param   REQUEST_METHOD          $request_method;
+    fastcgi_param   CONTENT_TYPE            $content_type;
+    fastcgi_param   CONTENT_LENGTH          $content_length;
+
+    fastcgi_param   SCRIPT_FILENAME         $document_root$fastcgi_script_name;
+    fastcgi_param   SCRIPT_NAME             $fastcgi_script_name;
+    fastcgi_param   PATH_INFO               $fastcgi_path_info;
+    fastcgi_param   REQUEST_URI             $request_uri;
+    fastcgi_param   DOCUMENT_URI            $document_uri;
+    fastcgi_param   DOCUMENT_ROOT           $document_root;
+    fastcgi_param   SERVER_PROTOCOL         $server_protocol;
+
+    fastcgi_param   GATEWAY_INTERFACE       CGI/1.1;
+    fastcgi_param   SERVER_SOFTWARE         nginx/$nginx_version;
+
+    fastcgi_param   REMOTE_ADDR             $remote_addr;
+    fastcgi_param   REMOTE_PORT             $remote_port;
+    fastcgi_param   SERVER_ADDR             $server_addr;
+    fastcgi_param   SERVER_PORT             $server_port;
+    fastcgi_param   SERVER_NAME             $server_name;
+
+    fastcgi_param   HTTPS                   $https;
+
+    # PHP only, required if PHP was built with --enable-force-cgi-redirect
+    fastcgi_param   REDIRECT_STATUS         200;
+---
+
+# nginx deployments
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      initContainers:
+        - name: app-build
+          image: gcr.io/learning-229721/excusebot:app
+          command: ['cp', '-rf', '/app/build', '/app/output']
+          volumeMounts:
+            - mountPath: "/app/output"
+              name: app-build
+        - name: sleep
+          image: busybox
+          args:
+            - sleep
+            - 5s
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          volumeMounts:
+            - mountPath: "/app"
+              name: app-build
+            - mountPath: /etc/nginx
+              readOnly: true
+              name: nginx-conf
+            - mountPath: /var/log/nginx
+              name: log
+            - mountPath: /etc/nginx/ssl
+              name: secret-volume
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+              - key: virtualhost.conf
+                path: virtualhost/virtualhost.conf
+              - key: fastcgi_params
+                path: fastcgi_params
+        - name: app-build
+          emptyDir: {}
+        - name: log
+          emptyDir: {}
+        - name: secret-volume
+          secret:
+            secretName: nginx-certs-keys
+---
+
+# nginx expose service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      name: http
+      targetPort: 80
+    - port: 443
+      name: https
+      targetPort: 443
+  selector:
+    app: nginx

@@ -1,0 +1,46 @@
+# fpm-config map
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fpm-config
+  namespace: default
+data:
+  docker.conf: |
+    [global]
+    error_log = /proc/self/fd/2
+    log_limit = 8192
+
+    [www]
+    access.log = /proc/self/fd/2
+    clear_env = no
+    catch_workers_output = yes
+    decorate_workers_output = no
+---
+
+# php-config map
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: php-config
+  namespace: default
+data:
+  php.ini: |
+    error_reporting = E_ALL
+    log_errors = On
+    error_log = /proc/self/fd/2
+---
+
+# app envs
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: php-env
+  namespace: default
+data:
+  APP_NAME: excusebot
+  APP_ENV: production
+  APP_KEY: base64:XD3eCeGynVJch/xO8M312yBzZzBxMjQuErS9EqWEILg=
+  CACHE_DRIVER: file
+  QUEUE_CONNECTION: sync
+  TELEGRAM_BOT_TOKEN: 727199234:AAFdJHp2dO8TRcbemwG1sh43VB_7NQOZoXw
+  TELEGRAM_BOT_USERNAME: superexcusebot

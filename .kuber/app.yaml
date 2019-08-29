@@ -1,0 +1,74 @@
+# fpm deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fpm
+  labels:
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fpm
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: fpm
+        tier: backend
+    spec:
+      initContainers:
+        - name: app-build
+          image: gcr.io/learning-229721/excusebot:app
+          command: ['cp', '-rf', '/app/build', '/app/output']
+          volumeMounts:
+            - mountPath: "/app/output"
+              name: app-build
+        - name: fix-perms
+          image: busybox
+          command: ['chown', 'www-data', '/app/build/storage']
+          volumeMounts:
+            - mountPath: "/app"
+              name: app-build
+      containers:
+        - name: fpm
+          image: php:7-fpm
+          ports:
+            - containerPort: 9000
+          envFrom:
+            - configMapRef:
+                name: php-env
+          volumeMounts:
+            - mountPath: "/app"
+              name: app-build
+            - mountPath: /usr/local/etc/php-fpm.d/docker.conf
+              name: config
+              subPath: docker.conf
+            - mountPath: /usr/local/etc/php/php.ini
+              name: php-config
+              subPath: php.ini
+      volumes:
+        - name: app-build
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: fpm-config
+        - name: php-config
+          configMap:
+            name: php-config
+---
+
+# fpm service
+apiVersion: v1
+kind: Service
+metadata:
+  name: fpm
+  labels:
+    tier: backend
+spec:
+  selector:
+    app: fpm
+    tier: backend
+  ports:
+    - protocol: TCP
+      port: 9000

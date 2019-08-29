@@ -10,7 +10,7 @@ use Telegram\Bot\Exceptions\TelegramSDKException;
 
 class ManageWebhookCommand extends Command
 {
-    protected $signature = 'telegram:webhook {action} {argument?}';
+    protected $signature = 'telegram:webhook {--cert=} {action} {argument?}';
 
     /** @var Api */
     protected $telegram;
@@ -26,7 +26,13 @@ class ManageWebhookCommand extends Command
 
         switch ($action) {
             case 'setup':
-                $res = $this->telegram->setWebhook(['url' => $this->input->getArgument('argument')]);
+                $params = ['url' => $this->input->getArgument('argument')];
+
+                if ($this->input->getOption('cert')) {
+                    $params['certificate'] = $this->input->getOption('cert');
+                }
+
+                $res = $this->telegram->setWebhook($params);
                 break;
             case 'delete':
                 $res = $this->telegram->deleteWebhook();
