@@ -13,7 +13,7 @@ class Excuses
      */
     public function __construct()
     {
-        $res = file_get_contents(__DIR__ . '/../storage/app/excuses.txt');
+        $res = file_get_contents(__DIR__ . '/../resources/excuses.txt');
 
         $this->excuses = explode(PHP_EOL, $res);
     }

@@ -19,7 +19,7 @@ spec:
     spec:
       initContainers:
         - name: app-build
-          image: gcr.io/learning-229721/excusebot:app
+          image: gcr.io/learning-229721/excusebot/app:latest
           command: ['cp', '-rf', '/app/build', '/app/output']
           volumeMounts:
             - mountPath: "/app/output"
