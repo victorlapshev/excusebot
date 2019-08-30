@@ -4,11 +4,11 @@ ADD composer.lock .
 ADD composer.json .
 ADD database database
 RUN composer install --no-dev --no-scripts
-ADD .. .
+ADD . .
 RUN composer dump-autoload
 
 
 FROM alpine
 WORKDIR /app/build
-ADD .. .
+ADD . .
 COPY --from=backend /app/vendor ./vendor
