@@ -1,0 +1,15 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: backend
+  image: composer
+  commands:
+  - composer install
+  - composer dump-autoload
+
+- name: test
+  image: php:7
+  commands:
+    - php vendor/phpunit/phpunit/phpunit
