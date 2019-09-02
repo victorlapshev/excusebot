@@ -32,6 +32,9 @@ steps:
           "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
           "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/drone-ci%40learning-229721.iam.gserviceaccount.com"
         }
+    when:
+      branch:
+        - master
 
   - name: publish-nginx
     image: plugins/gcr
@@ -52,9 +55,13 @@ steps:
           "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
           "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/drone-ci%40learning-229721.iam.gserviceaccount.com"
         }
+    when:
+      branch:
+        - master
 
 trigger:
   branch:
     - master
+    - devel
   event:
     - push
