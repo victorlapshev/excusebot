@@ -17,9 +17,7 @@ steps:
     image: plugins/gcr
     settings:
       repo: learning-229721/excusebot/app
-      tags:
-        - latest
-        - ${DRONE_SEMVER}
+      auto_tag: true
       json_key: >
         {
           "type": "service_account",
