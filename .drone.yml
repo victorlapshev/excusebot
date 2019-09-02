@@ -13,11 +13,32 @@ steps:
     commands:
       - php vendor/phpunit/phpunit/phpunit
 
-  - name: publish
+  - name: publish-fpm
     image: plugins/gcr
     settings:
-      repo: learning-229721/excusebot/app
+      repo: learning-229721/excusebot/fpm
       auto_tag: true
+      dockerfile: ./.deploy/fpm/Dockerfile
+      json_key: >
+        {
+          "type": "service_account",
+          "project_id": "learning-229721",
+          "private_key_id": "e7ce5fd501d63da2a53e1fae794cf46e47a32a06",
+          "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCp8FeMzN1zMqZU\nOFmYWuq3QaZnvrdhN+sLY+t/NSrpj2yAtcmrVipUMUC7m/B8ovxkmYWAG9ieCV0M\nI6UPZOjbuqmGcEEazZjHsvlxa3WDd79IJ8pL5TD89JNR60Remo+mzxsekJMCBool\nJUdS9IlkitsQ4C7UmIwtC+YFqpJ9YpBHQN95cmi4MX3ATt/wOqHdUcgZFffxKiGu\nn0QKUQxeWstbl3pq1oim7mis+UXzEOxQwZyV5FEt6rvMujKk0x+DjZLNie6bAJXX\nqtUF3ja515PEdmDpXDCiV4qgl4MKCT6gBvrNIvKyYqBMVtUw+v81m707jkFa2EFk\nSBkgHFL3AgMBAAECggEAAobi3mKbdl+N7pmp52SOsevlfAxvcKAivBgfw9P4D+IE\nlINffM86sObMlh2S/V91Dk/kFswTNAJiolATX7+54K6NX8TiivH8sBd+swuMg0hw\nDTQeQ3Okf1ZprGGpshhtQ2c3+YPf07tiKXw868RcGKUh7cXPnHSqPO8829+17uxW\nkL3pcrWIVk8kWSSllUQtVCpHc16exn9NID7aMiTV76pdgfvVQmUJ9pQfywrciSjt\nObTddYC2uS3cWKCbX4dFeSExui9Fc8xOVcXeb+J6BUPejfv6SJDrKCnun2QaTfP5\njsNNQxnTHvUP0gMYPoxNudkuqa05G5gn5RVc1XxsWQKBgQDYxvnN2e/9eEBJVx11\nqXrKbATSILi+suI34qgm1+L/jndvA+Vv2pzVgGLZvaleyGj1CjeytNJWV1hu5wEG\nfHZMPgoI+/OJAi/YFCEfRHALK9+JoWcZ5BJ+wiEWaqGY58jAOCDhsZVxxKNRrorv\n6AQLAfQEZmfSeVOnY2EMPISZvwKBgQDIr9UB9fFEBJPnwmFt+hq128vx/Zl5ktmM\nId+eLuAKUOznWZOBHLDe/YqKjneMyumKFtXKQjkxo5X4tJxoJhd47dwa/dpEvcm+\nqZvH8lCkM3+CGO/yKE4aJUd0QdqshCpK/FxOVGd8QeTucv+2F9PPxy9Fi347LV5h\nuR49Ik9kyQKBgCSutwLgiD3qJWbDuRZ6EW9DjCVKqDiM6L7wOegozB7Wqts8W4zr\n/3IZgaC6+XgyjaA5lGdHNfiqWyqZKJFCanpIXUZb7EAZAKOd9GToHdWmHPObPmkh\nMQgGLbcvYB0Ry+TLGrVWaaWQ0to1oQkrx9NdBz/fXF4/bap7pKZ/byjdAoGAZDm8\nLaCAf7GxlDs1oVEY6d39ertmXJsEXsHEBiHu7fgAeIH58q87fgItoIkKF5x3Cenh\nl4N/QNUr3uuEeVccvd484JYK3e3SxY+7Jx5TO84kTfraSpvqdZBMoTkKVsIixRRH\nnS72B8544MU6A9zegZQ+fYLu5esAidmDypBKClECgYBl4vxyF7y72uJA56ApfkOo\njZiAurW5NZuQakH1dvG05ecJWTnsjSGJxpeUdFdOXfepMuT1f74+2Tswzzxk8raG\nr9yFWTCJIcK6Fw+1ptZxvEAhNa/mjjz4GSOgNum4Ht/tocPLhrymI4cI08leXl8N\nqIu0iwA4WFHgHkZfzzmKyQ==\n-----END PRIVATE KEY-----\n",
+          "client_email": "drone-ci@learning-229721.iam.gserviceaccount.com",
+          "client_id": "106302777035308409795",
+          "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+          "token_uri": "https://oauth2.googleapis.com/token",
+          "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+          "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/drone-ci%40learning-229721.iam.gserviceaccount.com"
+        }
+
+  - name: publish-nginx
+    image: plugins/gcr
+    settings:
+      repo: learning-229721/excusebot/nginx
+      auto_tag: true
+      dockerfile: ./.deploy/nginx/Dockerfile
       json_key: >
         {
           "type": "service_account",

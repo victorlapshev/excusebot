@@ -17,30 +17,16 @@ spec:
         app: fpm
         tier: backend
     spec:
-      initContainers:
-        - name: app-build
-          image: gcr.io/learning-229721/excusebot/app:latest
-          command: ['cp', '-rf', '/app/build', '/app/output']
-          volumeMounts:
-            - mountPath: "/app/output"
-              name: app-build
-        - name: fix-perms
-          image: busybox
-          command: ['chown', 'www-data', '/app/build/storage']
-          volumeMounts:
-            - mountPath: "/app"
-              name: app-build
       containers:
         - name: fpm
-          image: php:7-fpm
+          image: gcr.io/learning-229721/excusebot/fpm:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 9000
           envFrom:
             - configMapRef:
                 name: php-env
           volumeMounts:
-            - mountPath: "/app"
-              name: app-build
             - mountPath: /usr/local/etc/php-fpm.d/docker.conf
               name: config
               subPath: docker.conf
@@ -48,8 +34,6 @@ spec:
               name: php-config
               subPath: php.ini
       volumes:
-        - name: app-build
-          emptyDir: {}
         - name: config
           configMap:
             name: fpm-config

@@ -9,6 +9,7 @@
 !/routes/**
 !/storage/app/**
 !/tests/**
+!/vendor/**
 
 !/artisan
 !/composer.json

@@ -125,27 +125,14 @@ spec:
       labels:
         app: nginx
     spec:
-      initContainers:
-        - name: app-build
-          image: gcr.io/learning-229721/excusebot/app:latest
-          command: ['cp', '-rf', '/app/build', '/app/output']
-          volumeMounts:
-            - mountPath: "/app/output"
-              name: app-build
-        - name: sleep
-          image: busybox
-          args:
-            - sleep
-            - 5s
       containers:
         - name: nginx
-          image: nginx
+          image: gcr.io/learning-229721/excusebot/nginx:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
             - containerPort: 443
           volumeMounts:
-            - mountPath: "/app"
-              name: app-build
             - mountPath: /etc/nginx
               readOnly: true
               name: nginx-conf
@@ -164,8 +151,6 @@ spec:
                 path: virtualhost/virtualhost.conf
               - key: fastcgi_params
                 path: fastcgi_params
-        - name: app-build
-          emptyDir: {}
         - name: log
           emptyDir: {}
         - name: secret-volume
