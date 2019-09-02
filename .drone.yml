@@ -32,6 +32,7 @@ steps:
         "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/drone-ci%40learning-229721.iam.gserviceaccount.com"
       }
 
+
 trigger:
   branch:
     - master
