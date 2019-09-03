@@ -25,7 +25,6 @@ $app = new Laravel\Lumen\Application(
 );
 
 // $app->withFacades();
-
 // $app->withEloquent();
 
 /*
@@ -49,6 +48,8 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->register(Illuminate\Redis\RedisServiceProvider::class);
+
 $app->bind('telegram', function () {
     return new Api(env('TELEGRAM_BOT_TOKEN'));
 });
@@ -56,6 +57,8 @@ $app->bind('telegram', function () {
 $app->bind('excuses', function () {
     return new Excuses();
 });
+
+$app->configure('database');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware

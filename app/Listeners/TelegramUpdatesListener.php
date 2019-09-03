@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\TelegramUpdatesEvent;
+use App\TelegramUser;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
@@ -50,5 +51,15 @@ class TelegramUpdatesListener
             'results' => json_encode($results),
             'cache_time' => 0,
         ]);
+
+        if ($serializedUser = app('redis')->get($updates->inlineQuery->from->id)) {
+            $telegramUser = TelegramUser::load($serializedUser);
+            $telegramUser->incrementCalls();
+        } else {
+            $name = sprintf('%s %s', $updates->inlineQuery->from->firstName, $updates->inlineQuery->from->lastName);
+            $telegramUser = new TelegramUser($updates->inlineQuery->from->id, $name);
+        }
+
+        app('redis')->set($updates->inlineQuery->from->id, (string)$telegramUser);
     }
 }
