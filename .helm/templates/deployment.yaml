@@ -1,0 +1,64 @@
+# fpm deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-fpm
+  labels:
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-fpm
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-fpm
+        tier: backend
+    spec:
+      containers:
+        - name: fpm
+          image: {{ .Values.app.image }}:{{ .Values.app.version }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+          env:
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis
+                key: redis-password
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-php-env
+          volumeMounts:
+            - mountPath: /usr/local/etc/php-fpm.d/docker.conf
+              name: config
+              subPath: docker.conf
+            - mountPath: /usr/local/etc/php/php.ini
+              name: php-config
+              subPath: php.ini
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Release.Name }}-fpm-config
+        - name: php-config
+          configMap:
+            name: {{ .Release.Name }}-php-config
+---
+
+# fpm service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-fpm-service
+  labels:
+    tier: backend
+spec:
+  selector:
+    app: {{ .Release.Name }}-fpm
+    tier: backend
+  ports:
+    - protocol: TCP
+      port: 9000

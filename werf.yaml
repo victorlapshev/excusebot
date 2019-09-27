@@ -1,0 +1,49 @@
+configVersion: 1
+project: excusebot
+---
+
+artifact: vendor
+from: composer
+
+git:
+  - add: '/app'
+    to: '/app/build/app'
+  - add: '/composer.json'
+    to: '/app/build/composer.json'
+  - add: '/composer.lock'
+    to: '/app/build/composer.lock'
+  - add: '/database'
+    to: '/app/build/database'
+
+shell:
+  install:
+    - cd /app/build
+    - composer install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader
+---
+
+image: app
+from: php:7-fpm
+git:
+  - add: '/'
+    to: '/app/build'
+    excludePaths:
+      - vendor
+      - Jenkinsfile
+      - werf.yaml
+      - .deploy
+docker:
+  WORKDIR: /app/build
+import:
+  - artifact: vendor
+    add: /app/build/vendor
+    before: setup
+ansible:
+  beforeInstall:
+    - name: "Install php packages"
+      raw: |
+        pecl install -o -f redis && rm -rf /tmp/pear \
+        && docker-php-ext-enable redis
+  setup:
+    - name: "Fix permissions"
+      shell: |
+        chown www-data /app/build/storage -R

@@ -1,0 +1,12 @@
+app:
+  image: gcr.io/learning-229721/app
+  version: latest
+  hostname: excusebot.lapsh.me
+
+redis:
+  cluster:
+    enabled: false
+  persistence:
+    enabled: true
+  configmap: |-
+    appendonly no

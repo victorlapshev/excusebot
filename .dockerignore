@@ -1,0 +1,17 @@
+**
+!Dockerfile
+
+!/app/**
+!/bootstrap/**
+!/database/**
+!/public/**
+!/resources/**
+!/routes/**
+!/storage/app/**
+!/tests/**
+!/vendor/**
+
+!/artisan
+!/composer.json
+!/composer.lock
+!/phpunit.xml

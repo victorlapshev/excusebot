@@ -1,0 +1,37 @@
+---
+kind: pipeline
+type: exec
+name: default
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: auth
+    commands:
+      - echo $SERVICE_ACCOUNT | base64 -d | docker login -u _json_key --password-stdin https://gcr.io
+      - echo $SERVICE_ACCOUNT | base64 -d > ~/google_creds.json
+      - gcloud auth activate-service-account --key-file ~/google_creds.json
+      - gcloud container clusters get-credentials excuse-bot-cluster --zone us-central1-a --project learning-229721
+      - helm init --client-only
+    environment:
+      SERVICE_ACCOUNT:
+        from_secret: service_account_base64
+  - name: build
+    commands:
+      - werf build --stages-storage :local
+  - name: publish
+    commands:
+      - werf images publish --stages-storage :local --images-repo gcr.io/learning-229721 --tag-git-tag ${DRONE_SEMVER}
+  - name: deploy
+    commands:
+      - helm upgrade bot .helm --set app.version=${DRONE_SEMVER} -f .helm/values.yaml
+  - name: cleanup
+    commands:
+      - werf cleanup --images-repo gcr.io/learning-229721 --stages-storage :local  --git-tag-strategy-limit=-3
+trigger:
+  event:
+    - tag
+  branch:
+    - master

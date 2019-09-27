@@ -1,0 +1,50 @@
+# fpm-config map
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-fpm-config
+  namespace: default
+data:
+  docker.conf: |
+    [global]
+    error_log = /proc/self/fd/2
+    log_limit = 8192
+
+    [www]
+    access.log = /proc/self/fd/2
+    clear_env = no
+    catch_workers_output = yes
+    decorate_workers_output = no
+---
+
+# php-config map
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-php-config
+  namespace: default
+data:
+  php.ini: |
+    error_reporting = E_ALL
+    log_errors = On
+    error_log = /proc/self/fd/2
+---
+
+# app envs
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-php-env
+  namespace: default
+data:
+  APP_NAME: excusebot
+  APP_ENV: production
+  APP_KEY: base64:XD3eCeGynVJch/xO8M312yBzZzBxMjQuErS9EqWEILg=
+  CACHE_DRIVER: file
+  QUEUE_CONNECTION: sync
+  TELEGRAM_BOT_TOKEN: 803861495:AAGM2xAlJHESM6Z7Hxjp08IgeGLGGiVjfp4
+  TELEGRAM_BOT_USERNAME: superexcusebot
+  REDIS_HOST: {{ .Release.Name }}-redis-master
+  REDIS_PORT: "6379"
+  REDIS_DATABASE: "0"
+  SENTRY_LARAVEL_DSN: https://66c7ad7cbbfb4ed79cf688486cbe50e0@sentry.io/1550734
