@@ -13,7 +13,7 @@ class Excuses
      */
     public function __construct()
     {
-        $this->excuses = Cache::remember('excuses-list', 60, function () {
+        $this->excuses = Cache::tags(['excuses'])->remember('excuses-list', 60, function () {
             $res = file_get_contents(__DIR__ . '/../resources/excuses.txt');
             return explode(PHP_EOL, $res);
         });
