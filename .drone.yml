@@ -27,6 +27,9 @@ steps:
   - name: deploy
     commands:
       - helm upgrade bot .helm --set app.version=${DRONE_SEMVER} -f .helm/values.yaml
+  - name: clear cace
+    commands:
+      - kubectl exec deployment/bot-fpm ./artisan cache:clear
   - name: cleanup
     commands:
       - werf cleanup --images-repo gcr.io/learning-229721 --stages-storage :local  --git-tag-strategy-limit=-3

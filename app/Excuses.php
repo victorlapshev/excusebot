@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Cache;
+
 class Excuses
 {
     protected $excuses = [];
@@ -11,9 +13,10 @@ class Excuses
      */
     public function __construct()
     {
-        $res = file_get_contents(__DIR__ . '/../resources/excuses.txt');
-
-        $this->excuses = explode(PHP_EOL, $res);
+        $this->excuses = Cache::remember('excuses-list', 60, function () {
+            $res = file_get_contents(__DIR__ . '/../resources/excuses.txt');
+            return explode(PHP_EOL, $res);
+        });
     }
 
     public function getRandom(): string
