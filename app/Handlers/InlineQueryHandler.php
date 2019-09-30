@@ -13,6 +13,10 @@ class InlineQueryHandler extends Handler
             ? $this->responseSearch($query)
             : $this->responseRandom();
 
+        if (!$response) {
+            return;
+        }
+
         app('telegram')->answerInlineQuery([
             'inline_query_id' => $inlineQuery['id'],
             'results' => json_encode($response),

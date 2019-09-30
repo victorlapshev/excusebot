@@ -21,7 +21,7 @@ class CommandGetHandler extends Handler
 
             app('telegram')->sendMessage([
                 'chat_id' => $message->chat->id,
-                'text' => $response ?? 'Ничего не найдено'
+                'text' => strlen($response) > 0 ? $response : 'Ничего не найдено'
             ]);
         } else {
             app('telegram')->sendMessage([
