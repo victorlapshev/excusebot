@@ -1,5 +1,8 @@
 FROM php:7.4-fpm as base
 RUN mkdir /usr/app && chown www-data /usr/app
+RUN apt update && apt install -y libpq-dev
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pgsql pdo_pgsql
 WORKDIR /usr/app
 
 
