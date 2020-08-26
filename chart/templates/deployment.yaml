@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-bot-deployment
+  labels:
+    app: bot
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: bot
+  template:
+    metadata:
+      labels:
+        app: bot
+    spec:
+      containers:
+        - name: fpm
+          image: '{{ .Values.image.repository }}/bot:{{ .Values.image.tag }}'
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+          - mountPath: /usr/local/etc/php/conf.d
+            name: php-config-volume
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-php-env
+      volumes:
+        - name: php-config-volume
+          configMap:
+            name: {{ .Release.Name }}-php-config

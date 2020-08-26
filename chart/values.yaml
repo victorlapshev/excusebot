@@ -1,0 +1,15 @@
+replicaCount: 1
+
+ingress:
+  host: bot.minikube
+
+image:
+  repository: localhost:5000
+  tag: 0.1.0
+
+app:
+  env: prod
+  secret: app-secret-here
+  telegram:
+    bot_name: bot-name-here
+    bot_token: secret-token-here-xxxxxxx

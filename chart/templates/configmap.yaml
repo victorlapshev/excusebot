@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-php-env
+data:
+  APP_ENV: {{ .Values.app.env }}
+  APP_SECRET: {{ .Values.app.secret }}
+  TELEGRAM_BOT_TOKEN: {{ .Values.app.telegram.bot_token }}
+  TELEGRAM_BOT_NAME: {{ .Values.app.telegram.bot_name }}
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-php-config
+data:
+  custom.ini: |-
+    report_memleaks = On
+  docker-php-ext-sodium.ini: |-
+    extension=sodium.so

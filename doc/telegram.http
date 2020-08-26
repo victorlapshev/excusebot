@@ -1,4 +1,4 @@
-POST http://localhost:8000/telegram/webhook
+POST http://bot.minikube/telegram/webhook
 Content-Type: application/json
 
 {
