@@ -33,4 +33,7 @@ RUN touch .env
 
 FROM base as dev
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+ENV PHP_IDE_CONFIG serverName=docker
+ADD .docker/dev-php.ini "$PHP_INI_DIR/conf.d/dev.ini"
 USER www-data
