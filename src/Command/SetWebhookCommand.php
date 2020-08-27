@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use Longman\TelegramBot\Exception\TelegramException;
-use Longman\TelegramBot\Telegram;
+use App\TelegramBot\Telegram;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

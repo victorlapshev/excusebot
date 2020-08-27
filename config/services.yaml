@@ -27,7 +27,7 @@ services:
     resource: '../src/Controller/'
     tags: ['controller.service_arguments']
 
-  Longman\TelegramBot\Telegram:
+  App\TelegramBot\Telegram:
     arguments:
       - '%env(TELEGRAM_BOT_TOKEN)%'
       - '%env(TELEGRAM_BOT_NAME)%'

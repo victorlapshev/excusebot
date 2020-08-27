@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use Longman\TelegramBot\Telegram;
+use App\TelegramBot\Telegram;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 

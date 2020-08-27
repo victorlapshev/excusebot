@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Excuse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -47,4 +49,18 @@ class ExcuseRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+     * @return Excuse
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function findRandom(): Excuse
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('Rand()')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleResult();
+    }
 }
