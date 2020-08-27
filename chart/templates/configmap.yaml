@@ -7,6 +7,7 @@ data:
   APP_SECRET: {{ .Values.app.secret }}
   TELEGRAM_BOT_TOKEN: {{ .Values.app.telegram.bot_token }}
   TELEGRAM_BOT_NAME: {{ .Values.app.telegram.bot_name }}
+  DATABASE_URL: {{ .Values.app.database | quote }}
 
 ---
 
@@ -17,5 +18,11 @@ metadata:
 data:
   custom.ini: |-
     report_memleaks = On
-  docker-php-ext-sodium.ini: |-
-    extension=sodium.so
+  opcache.ini: |-
+    opcache.enable=1
+    opcache.validate_timestamps=0
+    opcache.max_accelerated_files=50000
+    opcache.memory_consumption=192
+    opcache.max_wasted_percentage=10
+    opcache.interned_strings_buffer=16
+    opcache.fast_shutdown=1

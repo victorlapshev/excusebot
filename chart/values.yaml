@@ -5,6 +5,7 @@ ingress:
 
 image:
   repository: localhost:5000
+  pullSecret: registy-secret
   tag: latest
 
 app:
@@ -13,3 +14,4 @@ app:
   telegram:
     bot_name: bot-name-here
     bot_token: secret-token-here-xxxxxxx
+  database: "postgresql://db_user:db_pass@postgres:5432/db_name?serverVersion=11&charset=utf8"

@@ -16,11 +16,13 @@ RUN composer install --no-dev --optimize-autoloader --no-plugins --no-scripts
 
 
 FROM base as prod
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+RUN mv "$PHP_INI_DIR/php.ini-production" "c"
+RUN docker-php-ext-install opcache && docker-php-ext-enable opcache && docker-php-ext-configure opcache
 USER www-data
 ADD bin bin
 ADD config config
 ADD public public
+ADD migrations migrations
 ADD src src
 ADD composer.json .
 ADD composer.lock .
