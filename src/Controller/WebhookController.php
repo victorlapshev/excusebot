@@ -4,9 +4,10 @@ namespace App\Controller;
 
 use App\TelegramBot\Telegram;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class WebhookController
+class WebhookController extends AbstractController
 {
     public function handle(Telegram $telegram, LoggerInterface $logger): Response
     {

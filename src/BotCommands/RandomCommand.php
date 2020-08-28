@@ -26,7 +26,7 @@ class RandomCommand extends SystemCommand
         $doctrine = $this->telegram->getContainer()->get('doctrine');
 
         /** @var Excuse $excuse */
-        $excuse = $doctrine->getRepository(Excuse::class)->findRandom();
+        $excuse = $doctrine->getRepository(Excuse::class)->findRandomOne();
 
         return $this->replyToChat($excuse->getText());
     }

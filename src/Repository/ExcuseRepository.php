@@ -7,7 +7,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
-use PhpParser\Node\Expr\Array_;
 
 /**
  * @method Excuse|null find($id, $lockMode = null, $lockVersion = null)
@@ -56,13 +55,22 @@ class ExcuseRepository extends ServiceEntityRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function findRandom(): Excuse
+    public function findRandomOne(): Excuse
     {
         return $this->createQueryBuilder('e')
             ->orderBy('Rand()')
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleResult();
+    }
+
+    public function findRandom(int $count = 3): array
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('Rand()')
+            ->setMaxResults($count)
+            ->getQuery()
+            ->getResult();
     }
 
     /**

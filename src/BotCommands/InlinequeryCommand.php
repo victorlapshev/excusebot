@@ -29,27 +29,25 @@ class InlinequeryCommand extends SystemCommand
     {
         $inlineQuery = $this->getInlineQuery();
         $query = $inlineQuery->getQuery();
-        $doctrine = $this->telegram->getContainer()->get('doctrine');
+        $repo = $this->telegram->getContainer()->get('doctrine')->getRepository(Excuse::class);
 
         /** @var Excuse[] $excuses */
-        $excuses = $doctrine->getRepository(Excuse::class)->findByText($query);
+        $excuses = empty($query) ? $repo->findRandom() : $repo->findByText($query);
 
         $results = [];
 
-        if ($query !== '') {
-            foreach ($excuses as $excuse) {
-                $results[] = new InlineQueryResultArticle([
-                    'id' => $excuse->getId(),
-                    'title' => 'Отмазка ' . $excuse->getId(),
-                    'description' => $excuse->getText(),
+        foreach ($excuses as $excuse) {
+            $results[] = new InlineQueryResultArticle([
+                'id' => $excuse->getId(),
+                'title' => 'Отмазка ' . $excuse->getId(),
+                'description' => $excuse->getText(),
 
-                    'input_message_content' => new InputTextMessageContent([
-                        'message_text' => $excuse->getText(),
-                    ]),
-                ]);
-            }
+                'input_message_content' => new InputTextMessageContent([
+                    'message_text' => $excuse->getText(),
+                ]),
+            ]);
         }
 
-        return $inlineQuery->answer($results);
+        return $inlineQuery->answer($results, ['cache_time' => 0,]);
     }
 }
