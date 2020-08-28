@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use PhpParser\Node\Expr\Array_;
 
 /**
  * @method Excuse|null find($id, $lockMode = null, $lockVersion = null)
@@ -62,5 +63,18 @@ class ExcuseRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleResult();
+    }
+
+    /**
+     * @param string $text
+     * @return Excuse[]
+     */
+    public function findByText(string $text)
+    {
+        return $this->createQueryBuilder('e')
+            ->where("e.text LIKE '%$text%'")
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
     }
 }
