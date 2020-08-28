@@ -73,7 +73,7 @@ class ExcuseRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('e')
             ->where("e.text LIKE '%$text%'")
-            ->setMaxResults(10)
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult();
     }

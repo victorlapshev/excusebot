@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ExcuseRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ExcuseRepository::class)
@@ -18,7 +19,8 @@ class Excuse
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=2048)
+     * @Assert\Unique
+     * @ORM\Column(type="string", length=2048, unique=true)
      */
     private $text;
 
