@@ -8,6 +8,8 @@ data:
   TELEGRAM_BOT_TOKEN: {{ .Values.app.telegram.bot_token }}
   TELEGRAM_BOT_NAME: {{ .Values.app.telegram.bot_name }}
   DATABASE_URL: {{ .Values.app.database | quote }}
+  ELASTIC_HOST: {{ .Values.app.elastic.host | quote }}
+  ELASTIC_PORT: {{ .Values.app.elastic.port | quote }}
 
 ---
 

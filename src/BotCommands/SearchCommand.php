@@ -4,6 +4,8 @@ namespace App\BotCommands;
 
 use App\Entity\Excuse;
 use App\TelegramBot\Telegram;
+use Elastica\Client;
+use Elastica\Search;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;

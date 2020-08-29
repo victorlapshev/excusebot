@@ -32,5 +32,13 @@ services:
       - '%env(TELEGRAM_BOT_TOKEN)%'
       - '%env(TELEGRAM_BOT_NAME)%'
 
+  Elastica\Client:
+    arguments:
+      - host: '%env(ELASTIC_HOST)%'
+        port: '%env(ELASTIC_PORT)%'
+  Elastica\Search:
+    arguments:
+      - '@Elastica\Client'
+
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones

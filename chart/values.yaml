@@ -15,3 +15,6 @@ app:
     bot_name: bot-name-here
     bot_token: secret-token-here-xxxxxxx
   database: "postgresql://db_user:db_pass@postgres:5432/db_name?serverVersion=11&charset=utf8"
+  elastic:
+    host: localhost
+    port: 9200

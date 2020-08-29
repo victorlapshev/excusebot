@@ -1,3 +1,10 @@
 webhook:
   path: /telegram/webhook
   controller: App\Controller\WebhookController::handle
+welcome:
+  path: /
+  controller: App\Controller\Welcome::index
+search:
+  path: /excuse/search/{query}
+  controller: App\Controller\ExcuseController::search
+  methods: GET

@@ -7,6 +7,9 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use Elastica\Query;
+use Elastica\Query\Term;
+use Elastica\Search;
 
 /**
  * @method Excuse|null find($id, $lockMode = null, $lockVersion = null)
@@ -16,9 +19,15 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ExcuseRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var Search
+     */
+    private $elasticSearch;
+
+    public function __construct(ManagerRegistry $registry, Search $elasticSearch)
     {
         parent::__construct($registry, Excuse::class);
+        $this->elasticSearch = $elasticSearch;
     }
 
     // /**
@@ -79,9 +88,25 @@ class ExcuseRepository extends ServiceEntityRepository
      */
     public function findByText(string $text)
     {
+        $boolQuery = new Query\BoolQuery();
+        $boolQuery->addMust(new Query\Match('text', $text));
+
+        $this->elasticSearch
+            ->addIndex('excuse')
+            ->setQuery($boolQuery);
+
+        $search = $this->elasticSearch->search();
+
+        foreach ($search->getResults() as $result) {
+            $ids[] = $result->getId();
+        }
+
+        if (empty($ids)) {
+            return [];
+        }
+
         return $this->createQueryBuilder('e')
-            ->where("e.text LIKE '%$text%'")
-            ->setMaxResults(5)
+            ->where(sprintf('e.id in (%s)', implode(',', $ids)))
             ->getQuery()
             ->getResult();
     }
