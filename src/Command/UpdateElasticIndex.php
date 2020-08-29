@@ -30,7 +30,7 @@ class UpdateElasticIndex extends Command
         $excuseRepo = $this->em->getRepository(Excuse::class);
 
         $this->elasticaClient->request('excuse', 'DELETE');
-        $this->elasticaClient->request('excuse', 'PUT');
+        $this->elasticaClient->request('excuse', 'PUT', $this->getIndexBody());
 
         /** @var Excuse $excuse */
         foreach ($excuseRepo->findAll() as $excuse) {
@@ -41,5 +41,65 @@ class UpdateElasticIndex extends Command
         $output->writeln('Successfully updated');
 
         return Command::SUCCESS;
+    }
+
+    protected function getIndexBody()
+    {
+        return array(
+            'settings' =>
+                array(
+                    'analysis' =>
+                        array(
+                            'filter' =>
+                                array(
+                                    'russian_stop' =>
+                                        array(
+                                            'type' => 'stop',
+                                            'stopwords' => '_russian_',
+                                        ),
+                                    'russian_keywords' =>
+                                        array(
+                                            'type' => 'keyword_marker',
+                                            'keywords' =>
+                                                array(
+                                                    0 => 'пример',
+                                                ),
+                                        ),
+                                    'russian_stemmer' =>
+                                        array(
+                                            'type' => 'stemmer',
+                                            'language' => 'russian',
+                                        ),
+                                ),
+                            'analyzer' =>
+                                array(
+                                    'rebuilt_russian' =>
+                                        array(
+                                            'tokenizer' => 'standard',
+                                            'filter' =>
+                                                array(
+                                                    0 => 'lowercase',
+                                                    1 => 'russian_stop',
+                                                    2 => 'russian_keywords',
+                                                    3 => 'russian_stemmer',
+                                                ),
+                                        ),
+                                ),
+                        ),
+                ),
+            'mappings' =>
+                array(
+                    'properties' =>
+                        array(
+                            'text' =>
+                                array(
+                                    'type' => 'text',
+                                    'analyzer' => 'rebuilt_russian',
+                                    'search_analyzer' => 'rebuilt_russian',
+                                    'search_quote_analyzer' => 'rebuilt_russian',
+                                ),
+                        ),
+                ),
+        );
     }
 }
