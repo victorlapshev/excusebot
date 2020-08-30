@@ -23,8 +23,8 @@ steps:
       - docker build -t bot:latest --target prod .
   - name: publish
     commands:
-      - docker tag bot:latest ${DOCKER_REGISTRY}/otmazki/bot:${DRONE_SEMVER}
-      - docker push ${DOCKER_REGISTRY}/otmazki/bot:${DRONE_SEMVER}
+      - docker tag bot:latest $DOCKER_REGISTRY/otmazki/bot:${DRONE_SEMVER}
+      - docker push $DOCKER_REGISTRY/otmazki/bot:${DRONE_SEMVER}
     environment:
       DOCKER_REGISTRY:
         from_secret: DOCKER_REGISTRY
