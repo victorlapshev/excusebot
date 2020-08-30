@@ -10,7 +10,7 @@ platform:
 steps:
   - name: auth
     commands:
-      - echo $DOCKER_PASSWORD | base64 -d | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
     environment:
       DOCKER_USER:
         from_secret: DOCKER_USER
