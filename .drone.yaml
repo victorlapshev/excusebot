@@ -8,22 +8,26 @@ platform:
   arch: amd64
 
 steps:
-#  - name: auth
-#    commands:
-#      - echo $SERVICE_ACCOUNT | base64 -d | docker login -u _json_key --password-stdin https://gcr.io
-#      - echo $SERVICE_ACCOUNT | base64 -d > ~/google_creds.json
-#      - gcloud auth activate-service-account --key-file ~/google_creds.json
-#      - gcloud container clusters get-credentials excuse-bot-cluster --zone us-central1-a --project learning-229721
-#      - helm init --client-only
-#    environment:
-#      SERVICE_ACCOUNT:
-#        from_secret: service_account_base64
+  - name: auth
+    commands:
+      - echo $DOCKER_PASSWORD | base64 -d | docker login -u $DOCKER_USER --password-stdin ${DOCKER_REGISTRY}
+    environment:
+      DOCKER_USER:
+        from_secret: DOCKER_USER
+      DOCKER_PASSWORD:
+        from_secret: DOCKER_PASSWORD
+      DOCKER_REGISTRY:
+        from_secret: DOCKER_REGISTRY
   - name: build
     commands:
       - docker build -t bot:latest --target prod .
-#  - name: publish
-#    commands:
-#      - werf images publish --stages-storage :local --images-repo gcr.io/learning-229721 --tag-git-tag ${DRONE_SEMVER}
+  - name: publish
+    commands:
+      - docker tag bot:latest ${DOCKER_REGISTRY}/otmazki/bot:${DRONE_SEMVER}
+      - docker push ${DOCKER_REGISTRY}/otmazki/bot:${DRONE_SEMVER}
+    environment:
+      DOCKER_REGISTRY:
+        from_secret: DOCKER_REGISTRY
 #  - name: deploy
 #    commands:
 #      - helm upgrade bot .helm --set app.version=${DRONE_SEMVER} -f .helm/values.yaml --wait
