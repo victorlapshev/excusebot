@@ -27,6 +27,6 @@ class GenericmessageCommand extends \Longman\TelegramBot\Commands\SystemCommand
     {
         $messageText = $this->getMessage()->getText(true);
 
-        return $this->replyToChat('Да, полностью согласен');
+        return $this->replyToChat('Я не могу с тобой поговорить, я же бот!');
     }
 }
