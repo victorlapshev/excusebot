@@ -2,7 +2,7 @@
 
 namespace App\BotCommands;
 
-use App\Entity\Excuse;
+use App\Excuse\Random;
 use App\TelegramBot\Telegram;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
@@ -22,11 +22,9 @@ class RandomCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        $doctrine = $this->telegram->getContainer()->get('doctrine');
+        /** @var Random $random */
+        $random = $this->telegram->getContainer()->get(Random::class);
 
-        /** @var Excuse $excuse */
-        $excuse = $doctrine->getRepository(Excuse::class)->findRandomOne();
-
-        return $this->replyToChat($excuse->getText());
+        return $this->replyToChat($random->get());
     }
 }

@@ -2,8 +2,7 @@
 
 namespace App\BotCommands;
 
-use App\Entity\Excuse;
-use App\Repository\ExcuseRepository;
+use App\Excuse\Random;
 use App\TelegramBot\Telegram;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -36,9 +35,9 @@ class GenericmessageCommand extends \Longman\TelegramBot\Commands\SystemCommand
     {
         $messageText = $this->getMessage()->getText(true);
 
-        /** @var ExcuseRepository $repo */
-        $repo = $this->telegram->getContainer()->get('doctrine')->getRepository(Excuse::class);
+        /** @var Random $random */
+        $random = $this->telegram->getContainer()->get(Random::class);
 
-        return $this->replyToChat($repo->findRandomOne()->getText());
+        return $this->replyToChat($random->get());
     }
 }
