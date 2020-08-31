@@ -1,5 +1,20 @@
 ---
 kind: pipeline
+type: kubernetes
+name: quality
+
+steps:
+  - image: jakzal/phpqa:1.41.0
+    name: lint
+    commands:
+      - php-cs-fixer fix ./src --dry-run
+
+trigger:
+  event:
+    - push
+
+---
+kind: pipeline
 type: exec
 name: build
 
