@@ -28,17 +28,28 @@ steps:
     environment:
       DOCKER_REGISTRY:
         from_secret: DOCKER_REGISTRY
-#  - name: deploy
-#    commands:
-#      - helm upgrade bot .helm --set app.version=${DRONE_SEMVER} -f .helm/values.yaml --wait
-#  - name: clear cache
-#    commands:
-#      - kubectl exec deployment/bot-fpm ./artisan -- cache:clear --tags excuses
-#  - name: cleanup
-#    commands:
-#      - werf cleanup --images-repo gcr.io/learning-229721 --stages-storage :local  --git-tag-strategy-limit=-3
 trigger:
   event:
     - tag
-  branch:
-    - master
+
+---
+
+kind: pipeline
+type: kubernetes
+name: default
+
+steps:
+  - name: deploy
+    image: alpine/helm
+    when:
+      branch:
+        - master
+    commands:
+      - helm upgrade $HELM_RELEASE_NAME ./chart --reuse-values --set image.tag=$version --recreate-pods --install --wait
+    environment:
+      HELM_RELEASE_NAME:
+        from_secret: HELM_RELEASE_NAME
+
+trigger:
+  event:
+    - tag
