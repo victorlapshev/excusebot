@@ -45,7 +45,7 @@ steps:
       branch:
         - master
     commands:
-      - helm upgrade $HELM_RELEASE_NAME ./chart --reuse-values --set image.tag=$version --recreate-pods --install --wait
+      - helm upgrade $HELM_RELEASE_NAME ./chart --reuse-values --set image.tag=${DRONE_SEMVER} --recreate-pods --install --wait
     environment:
       HELM_RELEASE_NAME:
         from_secret: HELM_RELEASE_NAME
