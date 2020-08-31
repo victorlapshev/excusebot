@@ -53,3 +53,6 @@ steps:
 trigger:
   event:
     - tag
+
+depends_on:
+  - build
