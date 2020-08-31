@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use Elastica\Client;
-use Elastica\Document;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 

@@ -34,6 +34,7 @@ class ImportExcusesCommand extends Command
 
         if (!file_exists($filePath)) {
             $output->writeln('Cant find file');
+
             return Command::FAILURE;
         }
 
@@ -47,7 +48,7 @@ class ImportExcusesCommand extends Command
             $excuse = new Excuse();
             $excuse->setText($line);
             $this->em->persist($excuse);
-            $count++;
+            ++$count;
         }
 
         $this->em->flush();

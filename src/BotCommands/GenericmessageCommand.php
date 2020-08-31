@@ -26,9 +26,8 @@ class GenericmessageCommand extends \Longman\TelegramBot\Commands\SystemCommand
     protected $description = 'Handle generic message';
 
     /**
-     * Main command execution
+     * Main command execution.
      *
-     * @return ServerResponse
      * @throws TelegramException
      * @throws NoResultException
      * @throws NonUniqueResultException

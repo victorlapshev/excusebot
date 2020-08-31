@@ -29,9 +29,8 @@ class StartCommand extends SystemCommand
     protected $private_only = true;
 
     /**
-     * Main command execution
+     * Main command execution.
      *
-     * @return ServerResponse
      * @throws TelegramException
      */
     public function execute(): ServerResponse

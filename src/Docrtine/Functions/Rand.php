@@ -10,9 +10,7 @@ use Doctrine\ORM\Query\SqlWalker;
 
 class Rand extends FunctionNode
 {
-
     /**
-     * @param Parser $parser
      * @throws QueryException
      */
     public function parse(Parser $parser)

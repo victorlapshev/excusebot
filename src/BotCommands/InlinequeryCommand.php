@@ -21,9 +21,7 @@ class InlinequeryCommand extends SystemCommand
     protected $description = 'Handle inline query';
 
     /**
-     * Main command execution
-     *
-     * @return ServerResponse
+     * Main command execution.
      */
     public function execute(): ServerResponse
     {
@@ -48,6 +46,6 @@ class InlinequeryCommand extends SystemCommand
             ]);
         }
 
-        return $inlineQuery->answer($results, ['cache_time' => 0,]);
+        return $inlineQuery->answer($results, ['cache_time' => 0]);
     }
 }

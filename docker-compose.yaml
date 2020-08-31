@@ -9,6 +9,12 @@ services:
     volumes:
       - $PWD:/usr/app
 
+  php-qa:
+    image: jakzal/phpqa:1.41.0
+    volumes:
+      - $PWD:/usr/app
+    working_dir: /usr/app
+
   nginx:
     image: nginx:1.15.0
     ports:

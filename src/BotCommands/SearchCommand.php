@@ -4,8 +4,6 @@ namespace App\BotCommands;
 
 use App\Entity\Excuse;
 use App\TelegramBot\Telegram;
-use Elastica\Client;
-use Elastica\Search;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -20,7 +18,6 @@ class SearchCommand extends SystemCommand
     protected $usage = '/search <text>';
 
     /**
-     * @return ServerResponse
      * @throws TelegramException
      */
     public function execute(): ServerResponse

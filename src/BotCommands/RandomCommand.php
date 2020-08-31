@@ -18,7 +18,6 @@ class RandomCommand extends SystemCommand
     protected $usage = '/random';
 
     /**
-     * @return ServerResponse
      * @throws TelegramException
      */
     public function execute(): ServerResponse

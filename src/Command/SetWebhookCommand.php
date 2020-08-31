@@ -2,8 +2,8 @@
 
 namespace App\Command;
 
-use Longman\TelegramBot\Exception\TelegramException;
 use App\TelegramBot\Telegram;
+use Longman\TelegramBot\Exception\TelegramException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,6 +42,7 @@ class SetWebhookCommand extends Command
             }
         } catch (TelegramException $e) {
             $output->writeln($e->getMessage());
+
             return Command::FAILURE;
         }
 

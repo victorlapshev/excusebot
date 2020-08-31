@@ -45,61 +45,48 @@ class UpdateElasticIndex extends Command
 
     protected function getIndexBody()
     {
-        return array(
-            'settings' =>
-                array(
-                    'analysis' =>
-                        array(
-                            'filter' =>
-                                array(
-                                    'russian_stop' =>
-                                        array(
-                                            'type' => 'stop',
-                                            'stopwords' => '_russian_',
-                                        ),
-                                    'russian_keywords' =>
-                                        array(
-                                            'type' => 'keyword_marker',
-                                            'keywords' =>
-                                                array(
-                                                    0 => 'пример',
-                                                ),
-                                        ),
-                                    'russian_stemmer' =>
-                                        array(
-                                            'type' => 'stemmer',
-                                            'language' => 'russian',
-                                        ),
-                                ),
-                            'analyzer' =>
-                                array(
-                                    'rebuilt_russian' =>
-                                        array(
-                                            'tokenizer' => 'standard',
-                                            'filter' =>
-                                                array(
-                                                    0 => 'lowercase',
-                                                    1 => 'russian_stop',
-                                                    2 => 'russian_keywords',
-                                                    3 => 'russian_stemmer',
-                                                ),
-                                        ),
-                                ),
-                        ),
-                ),
-            'mappings' =>
-                array(
-                    'properties' =>
-                        array(
-                            'text' =>
-                                array(
-                                    'type' => 'text',
-                                    'analyzer' => 'rebuilt_russian',
-                                    'search_analyzer' => 'rebuilt_russian',
-                                    'search_quote_analyzer' => 'rebuilt_russian',
-                                ),
-                        ),
-                ),
-        );
+        return [
+            'settings' => [
+                'analysis' => [
+                    'filter' => [
+                        'russian_stop' => [
+                            'type' => 'stop',
+                            'stopwords' => '_russian_',
+                        ],
+                        'russian_keywords' => [
+                            'type' => 'keyword_marker',
+                            'keywords' => [
+                                0 => 'пример',
+                            ],
+                        ],
+                        'russian_stemmer' => [
+                            'type' => 'stemmer',
+                            'language' => 'russian',
+                        ],
+                    ],
+                    'analyzer' => [
+                        'rebuilt_russian' => [
+                            'tokenizer' => 'standard',
+                            'filter' => [
+                                0 => 'lowercase',
+                                1 => 'russian_stop',
+                                2 => 'russian_keywords',
+                                3 => 'russian_stemmer',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'mappings' => [
+                'properties' => [
+                    'text' => [
+                        'type' => 'text',
+                        'analyzer' => 'rebuilt_russian',
+                        'search_analyzer' => 'rebuilt_russian',
+                        'search_quote_analyzer' => 'rebuilt_russian',
+                    ],
+                ],
+            ],
+        ];
     }
 }

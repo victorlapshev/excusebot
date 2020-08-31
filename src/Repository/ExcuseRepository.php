@@ -8,7 +8,6 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Elastica\Query;
-use Elastica\Query\Term;
 use Elastica\Search;
 
 /**
@@ -60,7 +59,6 @@ class ExcuseRepository extends ServiceEntityRepository
     */
 
     /**
-     * @return Excuse
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
@@ -83,7 +81,6 @@ class ExcuseRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string $text
      * @return Excuse[]
      */
     public function findByText(string $text)
