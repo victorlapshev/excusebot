@@ -51,6 +51,9 @@ trigger:
   event:
     - tag
 
+depends_on:
+  - quality
+
 ---
 
 kind: pipeline
