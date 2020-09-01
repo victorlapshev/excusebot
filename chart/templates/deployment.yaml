@@ -30,6 +30,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Release.Name }}-php-env
+        - name: metrics
+          image: hipages/php-fpm_exporter
+          env:
+            - name: PHP_FPM_SCRAPE_URI
+              value: tcp://127.0.0.1:9000/status
+          ports:
+            - containerPort: 9253
       volumes:
         - name: php-config-volume
           configMap:
