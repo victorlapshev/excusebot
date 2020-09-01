@@ -9,6 +9,6 @@ class Welcome extends AbstractController
 {
     public function index()
     {
-        return new Response('Yo');
+        return new Response('Excuses bot welcome page');
     }
 }
