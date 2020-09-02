@@ -33,6 +33,9 @@ spec:
           volumeMounts:
           - mountPath: /usr/local/etc/php/conf.d/custom
             name: php-config-volume
+          - mountPath: /usr/local/etc/php-fpm.d/www.conf
+            subPath: www.conf
+            name: fpm-config-volume
           env:
             - name: PHP_INI_SCAN_DIR
               value: /usr/local/etc/php/conf.d:/usr/local/etc/php/conf.d/custom
@@ -50,3 +53,6 @@ spec:
         - name: php-config-volume
           configMap:
             name: {{ .Release.Name }}-php-config
+        - name: fpm-config-volume
+          configMap:
+            name: {{ .Release.Name }}-fpm-config
