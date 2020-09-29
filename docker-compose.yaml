@@ -32,7 +32,9 @@ services:
       - postgresql:/var/lib/postgresql/data
 
   elasticsearch:
-    image: elasticsearch:7.9.0
+    build:
+      context: ./
+      dockerfile: .docker/elastic/Dockerfile
     environment:
       - discovery.type=single-node
     ports:

@@ -15,12 +15,15 @@ class ExcuseController extends AbstractController
 
         $repo = $entityManager->getRepository(Excuse::class);
 
-        foreach ($repo->findByText($query) as $excuse) {
+        foreach ($repo->searchIndex($query) as $item) {
             $result[] = [
-                'text' => $excuse->getText(),
+                'text' => $item->getHighlights()['text'][0]
             ];
         }
 
-        return new JsonResponse($result);
+        $response = new JsonResponse($result);
+        $response->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+
+        return $response;
     }
 }

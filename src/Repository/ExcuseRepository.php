@@ -8,6 +8,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Elastica\Query;
+use Elastica\Result;
 use Elastica\Search;
 
 /**
@@ -81,20 +82,12 @@ class ExcuseRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param string $text
      * @return Excuse[]
      */
     public function findByText(string $text)
     {
-        $boolQuery = new Query\BoolQuery();
-        $boolQuery->addMust(new Query\Match('text', $text));
-
-        $this->elasticSearch
-            ->addIndex('excuse')
-            ->setQuery($boolQuery);
-
-        $search = $this->elasticSearch->search();
-
-        foreach ($search->getResults() as $result) {
+        foreach ($this->searchIndex($text) as $result) {
             $ids[] = $result->getId();
         }
 
@@ -106,5 +99,37 @@ class ExcuseRepository extends ServiceEntityRepository
             ->where(sprintf('e.id in (%s)', implode(',', $ids)))
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param string $text
+     * @return Result[]
+     */
+    public function searchIndex(string $text)
+    {
+        $boolQuery = new Query\BoolQuery();
+        $boolQuery->addMust(new Query\Match('text', $text));
+
+        $finalQuery = new \Elastica\Query($boolQuery);
+        $finalQuery->setHighlight(
+            [
+                'pre_tags' => ['<b>'],
+                'post_tags' => ['</b>'],
+                'fields' => [
+                    'text' => [
+                        'fragment_size' => 80,
+                        'number_of_fragments' => 1
+                    ]
+                ]
+            ]
+        );
+
+        $this->elasticSearch
+            ->addIndex('excuse')
+            ->setQuery($finalQuery);
+
+        $search = $this->elasticSearch->search();
+
+        return $search->getResults();
     }
 }

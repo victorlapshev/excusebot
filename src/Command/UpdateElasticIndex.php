@@ -29,7 +29,12 @@ class UpdateElasticIndex extends Command
     {
         $excuseRepo = $this->em->getRepository(Excuse::class);
 
-        $this->elasticaClient->request('excuse', 'DELETE');
+        try {
+            $this->elasticaClient->request('excuse', 'DELETE');
+        } catch (\Exception $e) {
+            $output->writeln('Cant delete index: not found');
+        }
+
         $this->elasticaClient->request('excuse', 'PUT', $this->getIndexBody());
 
         /** @var Excuse $excuse */
