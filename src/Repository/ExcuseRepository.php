@@ -113,8 +113,8 @@ class ExcuseRepository extends ServiceEntityRepository
         $finalQuery = new \Elastica\Query($boolQuery);
         $finalQuery->setHighlight(
             [
-                'pre_tags' => ['<b>'],
-                'post_tags' => ['</b>'],
+                'pre_tags' => ['*'],
+                'post_tags' => ['*'],
                 'fields' => [
                     'text' => [
                         'fragment_size' => 80,
