@@ -58,7 +58,7 @@ class InlinequeryCommand extends SystemCommand
             ]);
         }
 
-        return $inlineQuery->answer($results, ['cache_time' => 0]);
+        return $inlineQuery->answer($results, ['cache_time' => 0, 'parse_mode' => 'HTML']);
     }
 
     protected function findRandom(): array
