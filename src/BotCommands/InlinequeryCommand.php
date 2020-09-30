@@ -49,8 +49,8 @@ class InlinequeryCommand extends SystemCommand
             $i++;
             $results[] = new InlineQueryResultArticle([
                 'id' => $i,
-                'title' => $excuse['title'],
-                'parse_mode' => 'html',
+                'title' => 'Отмазка ' . $i,
+                'description' => $excuse['title'],
 
                 'input_message_content' => new InputTextMessageContent([
                     'message_text' => $excuse['text'],
