@@ -49,18 +49,16 @@ class InlinequeryCommand extends SystemCommand
             $i++;
             $results[] = new InlineQueryResultArticle([
                 'id' => $i,
-                'title' => 'Отмазка ' . $i,
-                'description' => $excuse['title'],
+                'title' => $excuse['title'],
                 'parse_mode' => 'html',
 
                 'input_message_content' => new InputTextMessageContent([
                     'message_text' => $excuse['text'],
-                    'parse_mode' => 'html',
                 ]),
             ]);
         }
 
-        return $inlineQuery->answer($results, ['cache_time' => 0, 'parse_mode' => 'html']);
+        return $inlineQuery->answer($results, ['cache_time' => 0]);
     }
 
     protected function findRandom(): array
